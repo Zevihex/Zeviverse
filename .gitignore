@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+
+# Virtual environments
+venv/
+env/
+.venv/
+.env/
+
+# PyInstaller / build
+build/
+dist/
+*.spec
+
+# VS Code
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE / editor specific
+*.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Logs
+*.log
+
+# Style files
+*.qssc

@@ -1,0 +1,35 @@
+QWidget {
+  background-color: black;
+}
+
+QFrame#side_menu {
+  background-color: black;
+  border-bottom: 2px solid white;
+  border-right: 2px solid white;
+  border-top: 2px solid white;
+}
+
+QLabel#label {
+  color: red;
+  font-size: 200px;
+}
+
+QPushButton {
+  background-color: black;
+  border: 2px solid white;
+  color: white;
+  font-size: 30px;
+}
+
+QPushButton:hover {
+  color: #007E91;
+}
+
+QPushButton:pressed {
+  color: #003B41;
+}
+
+QPushButton#button {
+  color:red;
+  font-size: 50px;
+}
