@@ -7,6 +7,7 @@ from PyQt5.QtCore import Qt, QPropertyAnimation, QRect
 from PyQt5.QtGui import QKeySequence
 from views.dashboard import Dashboard
 from views.collection import Collection
+from controllers.navigation import Navigation
 
 class Window(QWidget):
   def __init__(self):
@@ -49,42 +50,21 @@ class Window(QWidget):
     self.menu_anim.setDuration(250)
     self.menu_visible = False
 
-    self.hamburger_btn.clicked.connect(self.toggle_menu)
-    self.close_btn.clicked.connect(self.toggle_menu)
-    self.dashboard_btn.clicked.connect(self.show_dashboard)
-    self.collection_btn.clicked.connect(self.show_collection)
-
     self.dashboard_widget = Dashboard(self.stack)
     self.collection_widget = Collection(self.stack)
     self.stack.addWidget(self.window_widget)
     self.stack.addWidget(self.dashboard_widget)
     self.stack.addWidget(self.collection_widget)
 
+    self.nav = Navigation(self.side_menu, self.stack)
+    self.hamburger_btn.clicked.connect(lambda: self.nav.toggle_menu())
+    self.close_btn.clicked.connect(lambda: self.nav.toggle_menu())
+    self.dashboard_btn.clicked.connect(lambda: self.nav.show_page(self.dashboard_widget))
+    self.collection_btn.clicked.connect(lambda: self.nav.show_page(self.collection_widget))
+
 
     shortcut = QShortcut(QKeySequence("Escape"), self)
     shortcut.activated.connect(QApplication.quit)
-
-  def toggle_menu(self):
-    start_x, end_x = (0, -200) if self.menu_visible else (-200, 0)
-    self.menu_visible = not self.menu_visible
-    self.side_menu.raise_()
-    self.menu_anim.stop()
-    self.menu_anim.setStartValue(QRect(start_x, 0, 200, self.window_widget.height()))
-    self.menu_anim.setEndValue(QRect(end_x, 0, 200, self.window_widget.height()))
-    self.menu_anim.start()
-
-  def show_dashboard(self):
-    self.stack.setCurrentWidget(self.dashboard_widget)
-    self.toggle_menu()
-  
-  def show_collection(self):
-    self.stack.setCurrentWidget(self.collection_widget)
-    self.toggle_menu()
-
-  def resizeEvent(self, event):
-    x = 0 if self.menu_visible else -200
-    self.side_menu.setGeometry(x,0,200,self.window_widget.height())
-    super().resizeEvent(event)
 
 def main():
   app = QApplication(sys.argv)

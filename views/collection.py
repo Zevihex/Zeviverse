@@ -1,5 +1,6 @@
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QFrame
 from PyQt5.QtCore import Qt, QRect, QPropertyAnimation
+from controllers.navigation import Navigation
 
 class Collection(QWidget):
   def __init__(self, stack):
@@ -35,22 +36,10 @@ class Collection(QWidget):
     self.menu_anim.setDuration(250)
     self.menu_visible = False
 
-    self.hamburger_btn.clicked.connect(self.toggle_menu)
-    self.close_btn.clicked.connect(self.toggle_menu)
-    self.main_btn.clicked.connect(self.show_main)
-
-  def toggle_menu(self):
-    start_x, end_x = (0,-200) if self.menu_visible else (-200,0)
-    self.menu_visible = not self.menu_visible
-    self.side_menu.raise_()
-    self.menu_anim.stop()
-    self.menu_anim.setStartValue(QRect(start_x,0,200,self.height()))
-    self.menu_anim.setEndValue(QRect(end_x,0,200,self.height()))
-    self.menu_anim.start()
-
-  def show_main(self):
-    self.stack.setCurrentIndex(0)
-    self.toggle_menu()
+    self.nav = Navigation(self.side_menu, self.stack)
+    self.hamburger_btn.clicked.connect(self.nav.toggle_menu)
+    self.close_btn.clicked.connect(self.nav.toggle_menu)
+    self.main_btn.clicked.connect(lambda: self.nav.show_page(self.stack.widget(0)))
 
   def resizeEvent(self, event):
     x = 0 if self.menu_visible else -200
