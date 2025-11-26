@@ -11,6 +11,7 @@ class Collection(QWidget):
 
     self.menu = Menu(self, layout, self.stack)
     self.nav = self.menu.nav
+    self.nav.right_click_toggle(self) 
 
     self.label = QLabel("Collection")
     self.label.setObjectName("label")

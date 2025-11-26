@@ -1,6 +1,6 @@
 import sys, os
 from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QStackedWidget, QLabel, QShortcut
-from PyQt5.QtGui import QKeySequence
+from PyQt5.QtGui import QKeySequence, QFontDatabase, QFont
 from views.collection import Collection
 from views.dashboard import Dashboard
 from views.goals import Goals
@@ -42,6 +42,7 @@ class Window(QWidget):
     self.stack.addWidget(self.trackers_widget)
     self.stack.addWidget(self.wishlists_widget)
     self.nav = self.menu.nav
+    self.nav.right_click_toggle(self) 
 
     self.label = QLabel("Main Page")
     self.label.setObjectName("label")
@@ -50,11 +51,20 @@ class Window(QWidget):
     shortcut = QShortcut(QKeySequence("Escape"), self)
     shortcut.activated.connect(QApplication.quit)
 
+    font_id = QFontDatabase.addApplicationFont("./styles/fonts/science_gothic.ttf")
+    if font_id == -1:
+      print("Failed to load font")
+    else:
+      font_families = QFontDatabase.applicationFontFamilies(font_id)
+      print("Loaded font families: ", font_families)
+
+
 def main():
   app = QApplication(sys.argv)
   window = Window()
   window.showFullScreen()
   style_path = os.path.join("styles","style.qss")
+  app.setFont(QFont("Science Gothic", 12))
   if os.path.exists(style_path):
     with open(style_path,"r") as f:
       app.setStyleSheet(f.read())

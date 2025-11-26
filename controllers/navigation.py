@@ -1,7 +1,8 @@
-from PyQt5.QtCore import QPropertyAnimation, QRect
+from PyQt5.QtCore import QObject, QPropertyAnimation, QRect, Qt, QEvent
 
-class Navigation:
+class Navigation(QObject):
   def __init__(self, side_menu, stack):
+    super().__init__()
     self.side = side_menu
     self.stack = stack
     self.menu_visible = False
@@ -30,4 +31,13 @@ class Navigation:
   def show_page(self, widget):
     self.stack.setCurrentWidget(widget)
     self.toggle_menu()
+
+  def right_click_toggle(self, widget):
+    widget.installEventFilter(self)
+
+  def eventFilter(self, obj, event):
+    if event.type() == QEvent.MouseButtonPress and event.button() == Qt.RightButton:
+      self.toggle_menu()
+      return True
+    return False
 

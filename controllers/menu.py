@@ -22,13 +22,9 @@ class Menu:
 
     self.side_menu_layout = QVBoxLayout(self.side_menu)
     self.side_menu_layout.setContentsMargins(0, 0, 0, 0)
+    self.side_menu_layout.setAlignment(Qt.AlignTop)
 
-    self.close_btn = QPushButton("✕")
-    self.close_btn.setFixedSize(50, 50)
-
-    self.side_menu_layout.addWidget(self.close_btn, alignment=Qt.AlignRight | Qt.AlignTop)
-
-    self.main_btn = QPushButton("Home")
+    self.main_btn = QPushButton("Main")
     self.collection_btn = QPushButton("Collection")
     self.dashboard_btn = QPushButton("Dashboard")
     self.goals_btn = QPushButton("Goals")
@@ -55,7 +51,6 @@ class Menu:
     self.nav = Navigation(self.side_menu, self.stack)
 
     self.hamburger_btn.clicked.connect(self.nav.toggle_menu)
-    self.close_btn.clicked.connect(self.nav.toggle_menu)
     self.main_btn.clicked.connect(lambda: self.nav.show_page(self.stack.widget(0)))
     self.collection_btn.clicked.connect(lambda: self.nav.show_page(self.stack.widget(1)))
     self.dashboard_btn.clicked.connect(lambda: self.nav.show_page(self.stack.widget(2)))
