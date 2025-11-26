@@ -1,10 +1,4 @@
-import sys, os
-from PyQt5.QtWidgets import (
-  QApplication, QWidget, QVBoxLayout, QHBoxLayout, QStackedWidget,
-  QPushButton, QFrame, QLabel, QShortcut
-)
-from PyQt5.QtCore import Qt, QPropertyAnimation, QRect
-from PyQt5.QtGui import QKeySequence
+from PyQt5.QtCore import QPropertyAnimation, QRect
 
 class Navigation:
   def __init__(self, side_menu, stack):

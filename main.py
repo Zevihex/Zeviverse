@@ -1,9 +1,14 @@
 import sys, os
 from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QStackedWidget, QLabel, QShortcut
 from PyQt5.QtGui import QKeySequence
-from views.dashboard import Dashboard
 from views.collection import Collection
-from controllers.navigation import Navigation
+from views.dashboard import Dashboard
+from views.goals import Goals
+from views.links import Links
+from views.schedule import Schedule
+from views.todos import ToDos
+from views.trackers import Trackers
+from views.wishlists import Wishlists
 from controllers.menu import Menu
 
 class Window(QWidget):
@@ -18,20 +23,25 @@ class Window(QWidget):
     window_layout.setContentsMargins(0, 0, 0, 0)
     self.layout.addWidget(self.stack)
 
-
-    self.menu = Menu(self.window_widget, window_layout)
-    self.dashboard_widget = Dashboard(self.stack)
+    self.menu = Menu(self.window_widget, window_layout, self.stack)
     self.collection_widget = Collection(self.stack)
+    self.dashboard_widget = Dashboard(self.stack)
+    self.goals_widget = Goals(self.stack)
+    self.links_widget = Links(self.stack)
+    self.schedule_widget = Schedule(self.stack)
+    self.todos_widget = ToDos(self.stack)
+    self.trackers_widget = Trackers(self.stack)
+    self.wishlists_widget = Wishlists(self.stack)
     self.stack.addWidget(self.window_widget)
-    self.stack.addWidget(self.dashboard_widget)
     self.stack.addWidget(self.collection_widget)
-
-    self.nav = Navigation(self.menu.side_menu, self.stack)
-    self.menu.hamburger_btn.clicked.connect(lambda: self.nav.toggle_menu())
-    self.menu.close_btn.clicked.connect(lambda: self.nav.toggle_menu())
-    self.menu.main_btn.clicked.connect(lambda: self.nav.show_page(self.stack.widget(0)))
-    self.menu.dashboard_btn.clicked.connect(lambda: self.nav.show_page(self.stack.widget(1)))
-    self.menu.collection_btn.clicked.connect(lambda: self.nav.show_page(self.stack.widget(2)))
+    self.stack.addWidget(self.dashboard_widget)
+    self.stack.addWidget(self.goals_widget)
+    self.stack.addWidget(self.links_widget)
+    self.stack.addWidget(self.schedule_widget)
+    self.stack.addWidget(self.todos_widget)
+    self.stack.addWidget(self.trackers_widget)
+    self.stack.addWidget(self.wishlists_widget)
+    self.nav = self.menu.nav
 
     self.label = QLabel("Main Page")
     self.label.setObjectName("label")

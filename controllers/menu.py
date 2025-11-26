@@ -1,9 +1,11 @@
-from PyQt5.QtWidgets import QHBoxLayout, QVBoxLayout, QPushButton, QLabel, QFrame
+from PyQt5.QtWidgets import QHBoxLayout, QVBoxLayout, QPushButton, QFrame
 from PyQt5.QtCore import Qt, QPropertyAnimation
+from controllers.navigation import Navigation
 
 class Menu:
-  def __init__(self, parent_widget, window_layout):
+  def __init__(self, parent_widget, window_layout, stack):
     self.parent = parent_widget
+    self.stack = stack
 
     top_bar = QHBoxLayout()
     window_layout.addLayout(top_bar)
@@ -27,13 +29,39 @@ class Menu:
     self.side_menu_layout.addWidget(self.close_btn, alignment=Qt.AlignRight | Qt.AlignTop)
 
     self.main_btn = QPushButton("Home")
-    self.dashboard_btn = QPushButton("Dashboard")
     self.collection_btn = QPushButton("Collection")
+    self.dashboard_btn = QPushButton("Dashboard")
+    self.goals_btn = QPushButton("Goals")
+    self.links_btn = QPushButton("Links")
+    self.schedule_btn = QPushButton("Schedule")
+    self.todos_btn = QPushButton("Todos")
+    self.trackers_btn = QPushButton("Trackers")
+    self.wishlists_btn = QPushButton("Wishlists")
+
     self.side_menu_layout.addWidget(self.main_btn)
-    self.side_menu_layout.addWidget(self.dashboard_btn)
     self.side_menu_layout.addWidget(self.collection_btn)
+    self.side_menu_layout.addWidget(self.dashboard_btn)
+    self.side_menu_layout.addWidget(self.goals_btn)
+    self.side_menu_layout.addWidget(self.links_btn)
+    self.side_menu_layout.addWidget(self.schedule_btn)
+    self.side_menu_layout.addWidget(self.todos_btn)
+    self.side_menu_layout.addWidget(self.trackers_btn)
+    self.side_menu_layout.addWidget(self.wishlists_btn)
 
     self.menu_anim = QPropertyAnimation(self.side_menu, b"geometry")
     self.menu_anim.setDuration(250)
-
     self.menu_visible = False
+
+    self.nav = Navigation(self.side_menu, self.stack)
+
+    self.hamburger_btn.clicked.connect(self.nav.toggle_menu)
+    self.close_btn.clicked.connect(self.nav.toggle_menu)
+    self.main_btn.clicked.connect(lambda: self.nav.show_page(self.stack.widget(0)))
+    self.collection_btn.clicked.connect(lambda: self.nav.show_page(self.stack.widget(1)))
+    self.dashboard_btn.clicked.connect(lambda: self.nav.show_page(self.stack.widget(2)))
+    self.goals_btn.clicked.connect(lambda: self.nav.show_page(self.stack.widget(3)))
+    self.links_btn.clicked.connect(lambda: self.nav.show_page(self.stack.widget(4)))
+    self.schedule_btn.clicked.connect(lambda: self.nav.show_page(self.stack.widget(5)))
+    self.todos_btn.clicked.connect(lambda: self.nav.show_page(self.stack.widget(6)))
+    self.trackers_btn.clicked.connect(lambda: self.nav.show_page(self.stack.widget(7)))
+    self.wishlists_btn.clicked.connect(lambda: self.nav.show_page(self.stack.widget(8)))
