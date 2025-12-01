@@ -9,7 +9,7 @@ class Trackers(QWidget):
     layout = QVBoxLayout(self)
     layout.setContentsMargins(0, 0, 0, 0)
 
-    self.menu = Menu(self, layout, self.stack)
+    self.menu = Menu(self, layout, self.stack, "Trackers")
     self.nav = self.menu.nav
     self.nav.right_click_toggle(self) 
 

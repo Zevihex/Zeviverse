@@ -1,0 +1,86 @@
+import json
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QComboBox, QLineEdit, QPushButton, QMessageBox
+from controllers.menu import Menu
+from utils.message_boxes import show_warning, show_success
+
+class Tabs(QWidget):
+  def __init__(self, stack):
+    super().__init__()
+    self.stack = stack
+
+    layout = QVBoxLayout(self)
+    layout.setContentsMargins(0, 0, 0, 0)
+
+    self.menu = Menu(self, layout, self.stack)
+    self.nav = self.menu.nav
+    self.nav.right_click_toggle(self) 
+
+    self.combo = QComboBox()
+    self.combo.setParent(self)
+    self.combo.addItems(["", "Goals", "ToDos", "Trackers", "Wishlists"])
+    self.combo.setFixedSize(120, 30)
+    self.combo.move(500, 100)
+
+    self.line_edit = QLineEdit()
+    self.line_edit.setParent(self)
+    self.line_edit.setPlaceholderText("  Tab Name")
+    self.line_edit.setFixedSize(120, 30)
+    self.line_edit.move(500, 140)
+
+    self.submit_btn = QPushButton("Submit")
+    self.submit_btn.setParent(self)
+    self.submit_btn.setObjectName("submit")
+    self.submit_btn.clicked.connect(lambda: self.submit(self.combo.currentText(), self.line_edit.text()))
+    self.submit_btn.setFixedSize(120, 30)
+    self.submit_btn.move(500, 180)
+
+    self.delete_btn = QPushButton("Delete")
+    self.delete_btn.setParent(self)
+    self.delete_btn.setObjectName("delete")
+    self.delete_btn.clicked.connect(lambda: self.delete(self.combo.currentText(), self.line_edit.text()))
+    self.delete_btn.setFixedSize(120, 30)
+    self.delete_btn.move(500, 220)
+
+    
+    self.label = QLabel("Tabs")
+    self.label.setObjectName("label")
+    layout.addWidget(self.label)
+  
+  def submit(self, category, name):
+    print(f"{name} in {category}")
+    if not category or not name:
+      show_warning("Both fields must be filled")
+    else:
+      self.combo.setCurrentIndex(0)
+      self.line_edit.clear()
+      show_success("Submitted successfully")
+      with open("data/tabs.json", "r") as f:
+        data = json.load(f)
+      if category not in data:
+        data[category] = []
+      data[category].append(name)
+      with open("data/tabs.json", "w") as f:
+        json.dump(data, f, indent=2)
+  
+  def delete(self, category, name):
+    if not category and not name:
+      show_warning("Category must be filled")
+    else:
+      with open("data/tabs.json", "r") as f:
+        content = f.read().strip()
+        data = json.loads(content) if content else {}
+      self.combo.setCurrentIndex(0)
+      self.line_edit.clear()
+      if(category in data and name not in data):
+        del data[category]
+        with open('data/tabs.json', "w") as f:
+          json.dump(data, f, indent=2)
+        show_success("Deleted successfully")
+      elif category in data and name in data[category]:
+        data[category].remove(name)
+        with open('data/tabs.json', "w") as f:
+          json.dump(data, f, indent=2)
+        show_success("Deleted successfully")
+      else:
+        show_warning("Deletion Unsuccessful")
+      

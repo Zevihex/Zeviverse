@@ -33,3 +33,48 @@ QPushButton#button {
   color:red;
   font-size: 50px;
 }
+
+#top_bar {
+  border: 2px solid white;
+}
+
+QComboBox {
+  padding: 6px;
+  border: 2px solid white;
+  border-radius: 5px;
+  background: #222;
+  color: white;
+}
+
+QComboBox QAbstractItemView {
+  background-color: #333;
+  color: white;
+}
+
+QComboBox QAbstractItemView::item:selected {
+  background: #555;
+  color: white;
+}
+
+QLineEdit {
+  background-color: #333;
+  color: white;
+}
+
+#submit {
+  font-size: 20px;
+}
+
+QMessageBox {
+  background-color: #222;
+  color: white;
+}
+
+QLabel {
+  color: white;
+}
+
+#tab {
+  padding-left: 10px;
+  padding-right: 10px;
+}

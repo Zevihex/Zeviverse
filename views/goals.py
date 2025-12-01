@@ -6,13 +6,16 @@ class Goals(QWidget):
     super().__init__()
     self.stack = stack
 
-    layout = QVBoxLayout(self)
-    layout.setContentsMargins(0, 0, 0, 0)
+    self.layout = QVBoxLayout(self)
+    self.layout.setContentsMargins(0, 0, 0, 0)
 
-    self.menu = Menu(self, layout, self.stack)
+    self.menu = Menu(self, self.layout, self.stack, "Goals")
     self.nav = self.menu.nav
-    self.nav.right_click_toggle(self) 
+    self.nav.right_click_toggle(self)
 
     self.label = QLabel("Goals")
     self.label.setObjectName("label")
-    layout.addWidget(self.label)
+    self.layout.addWidget(self.label)
+
+  def show_item_widget(self, name):
+    print(f"Show widget for: {name}")

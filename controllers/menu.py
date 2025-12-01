@@ -1,18 +1,38 @@
-from PyQt5.QtWidgets import QHBoxLayout, QVBoxLayout, QPushButton, QFrame
+import json
+from PyQt5.QtWidgets import QHBoxLayout, QVBoxLayout, QPushButton, QFrame, QWidget
 from PyQt5.QtCore import Qt, QPropertyAnimation
 from controllers.navigation import Navigation
 
 class Menu:
-  def __init__(self, parent_widget, window_layout, stack):
+  def __init__(self, parent_widget, window_layout, stack, category=None):
     self.parent = parent_widget
     self.stack = stack
-
-    top_bar = QHBoxLayout()
-    window_layout.addLayout(top_bar)
+    
+    top_bar_widget = QWidget()
+    top_bar_widget.setObjectName("top_bar")
+    top_bar = QHBoxLayout(top_bar_widget)
+    top_bar_widget.setContentsMargins(0, 0, 0, 0)
+    top_bar.setContentsMargins(0, 0, 0, 0)
+    top_bar.setSpacing(0)
+    window_layout.addWidget(top_bar_widget)
 
     self.hamburger_btn = QPushButton("☰")
     self.hamburger_btn.setFixedSize(60, 60)
+    self.tabs_layout = QHBoxLayout()
+    self.tabs_layout.setSpacing(0)
     top_bar.addWidget(self.hamburger_btn)
+
+    if category:
+      with open("data/tabs.json", "r") as f:
+        data = json.load(f)
+      if category in data:
+        for name in data[category]:
+          btn = QPushButton(name)
+          btn.setFixedHeight(60)
+          btn.setObjectName("tab")
+          self.tabs_layout.addWidget(btn)
+    top_bar.addLayout(self.tabs_layout)
+
     top_bar.addStretch()
     window_layout.addStretch()
 
@@ -30,6 +50,7 @@ class Menu:
     self.goals_btn = QPushButton("Goals")
     self.links_btn = QPushButton("Links")
     self.schedule_btn = QPushButton("Schedule")
+    self.tabs_btn = QPushButton("Tabs")
     self.todos_btn = QPushButton("Todos")
     self.trackers_btn = QPushButton("Trackers")
     self.wishlists_btn = QPushButton("Wishlists")
@@ -40,6 +61,7 @@ class Menu:
     self.side_menu_layout.addWidget(self.goals_btn)
     self.side_menu_layout.addWidget(self.links_btn)
     self.side_menu_layout.addWidget(self.schedule_btn)
+    self.side_menu_layout.addWidget(self.tabs_btn)
     self.side_menu_layout.addWidget(self.todos_btn)
     self.side_menu_layout.addWidget(self.trackers_btn)
     self.side_menu_layout.addWidget(self.wishlists_btn)
@@ -57,6 +79,7 @@ class Menu:
     self.goals_btn.clicked.connect(lambda: self.nav.show_page(self.stack.widget(3)))
     self.links_btn.clicked.connect(lambda: self.nav.show_page(self.stack.widget(4)))
     self.schedule_btn.clicked.connect(lambda: self.nav.show_page(self.stack.widget(5)))
-    self.todos_btn.clicked.connect(lambda: self.nav.show_page(self.stack.widget(6)))
-    self.trackers_btn.clicked.connect(lambda: self.nav.show_page(self.stack.widget(7)))
-    self.wishlists_btn.clicked.connect(lambda: self.nav.show_page(self.stack.widget(8)))
+    self.tabs_btn.clicked.connect(lambda: self.nav.show_page(self.stack.widget(6)))
+    self.todos_btn.clicked.connect(lambda: self.nav.show_page(self.stack.widget(7)))
+    self.trackers_btn.clicked.connect(lambda: self.nav.show_page(self.stack.widget(8)))
+    self.wishlists_btn.clicked.connect(lambda: self.nav.show_page(self.stack.widget(9)))

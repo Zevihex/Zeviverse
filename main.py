@@ -6,6 +6,7 @@ from views.dashboard import Dashboard
 from views.goals import Goals
 from views.links import Links
 from views.schedule import Schedule
+from views.tabs import Tabs
 from views.todos import ToDos
 from views.trackers import Trackers
 from views.wishlists import Wishlists
@@ -29,6 +30,7 @@ class Window(QWidget):
     self.goals_widget = Goals(self.stack)
     self.links_widget = Links(self.stack)
     self.schedule_widget = Schedule(self.stack)
+    self.tabs_widget = Tabs(self.stack)
     self.todos_widget = ToDos(self.stack)
     self.trackers_widget = Trackers(self.stack)
     self.wishlists_widget = Wishlists(self.stack)
@@ -38,6 +40,7 @@ class Window(QWidget):
     self.stack.addWidget(self.goals_widget)
     self.stack.addWidget(self.links_widget)
     self.stack.addWidget(self.schedule_widget)
+    self.stack.addWidget(self.tabs_widget)
     self.stack.addWidget(self.todos_widget)
     self.stack.addWidget(self.trackers_widget)
     self.stack.addWidget(self.wishlists_widget)
