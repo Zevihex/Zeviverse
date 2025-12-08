@@ -4,7 +4,7 @@ from PyQt5.QtCore import Qt, QPropertyAnimation
 from controllers.navigation import Navigation
 
 class Menu:
-  def __init__(self, parent_widget, window_layout, stack, category=None):
+  def __init__(self, parent_widget, window_layout, stack, category=None, get_name=None):
     self.parent = parent_widget
     self.stack = stack
     
@@ -30,6 +30,7 @@ class Menu:
           btn = QPushButton(name)
           btn.setFixedHeight(60)
           btn.setObjectName("tab")
+          btn.clicked.connect(lambda _, n=name: get_name(n.lower()))
           self.tabs_layout.addWidget(btn)
     top_bar.addLayout(self.tabs_layout)
 

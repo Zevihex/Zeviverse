@@ -1,4 +1,4 @@
-import json
+import json, os
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QComboBox, QLineEdit, QPushButton, QMessageBox
 from controllers.menu import Menu
 from utils.message_boxes import show_warning, show_success
@@ -47,7 +47,6 @@ class Tabs(QWidget):
     layout.addWidget(self.label)
   
   def submit(self, category, name):
-    print(f"{name} in {category}")
     if not category or not name:
       show_warning("Both fields must be filled")
     else:
@@ -61,6 +60,19 @@ class Tabs(QWidget):
       data[category].append(name)
       with open("data/tabs.json", "w") as f:
         json.dump(data, f, indent=2)
+      category = category.lower()
+      name = name.lower()
+      headers = []
+      if category == "goals":
+        headers = ["Goal", "Status", "Completed"]
+      elif category == "todos":
+        headers = []
+      elif category == "trackers":
+        headers = []
+      elif category == "wishlists":
+        headers = []
+      with open(f"data/{category}/{name}.json", "w") as f:
+        json.dump([headers], f, indent=2)
   
   def delete(self, category, name):
     if not category and not name:
@@ -71,15 +83,20 @@ class Tabs(QWidget):
         data = json.loads(content) if content else {}
       self.combo.setCurrentIndex(0)
       self.line_edit.clear()
-      if(category in data and name not in data):
+      if(category in data and not name):
         del data[category]
         with open('data/tabs.json', "w") as f:
           json.dump(data, f, indent=2)
+        for file in os.listdir(f"data/{category}"):
+          os.remove(f"data/{category}/{file}")
         show_success("Deleted successfully")
       elif category in data and name in data[category]:
         data[category].remove(name)
         with open('data/tabs.json', "w") as f:
           json.dump(data, f, indent=2)
+        category = category.lower()
+        name = name.lower()
+        os.remove(f"data/{category}/{name}.json")
         show_success("Deleted successfully")
       else:
         show_warning("Deletion Unsuccessful")

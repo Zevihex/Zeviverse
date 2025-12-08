@@ -78,3 +78,62 @@ QLabel {
   padding-left: 10px;
   padding-right: 10px;
 }
+
+QTableWidget {
+  background-color: black;
+  border: 1px solid #d0d0d0;
+  font-family: "Science Gothic";
+  padding: 4px;
+  color: white;
+}
+
+QTableWidget::item {
+  background: rgb(0, 24, 54);
+}
+
+QTableWidget::item:alternate {
+  background: rgb(20, 36, 56);
+}
+
+QHeaderView::section {
+    background-color: #222;
+    color: white;
+    font-family: "Science Gothic";
+    font-size: 12pt;
+    font-weight: bold;
+    padding: 4px;
+    border: 1px solid #333;
+}
+
+QTableCornerButton::section {
+  background-color: #333;
+  border: 1px solid #222;
+}
+
+QTableWidget::indicator {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+QCheckBox {
+    background: transparent;
+}
+
+QCheckBox::indicator {
+    width: 18px;
+    height: 18px;
+    background-color: black;
+    border: 2px solid white;
+}
+
+/* Checked = solid white square */
+QCheckBox::indicator:checked {
+    background-color: white;
+    border: 2px solid white;
+}
+
+/* Unchecked = black box */
+QCheckBox::indicator:unchecked {
+    background-color: black;
+    border: 2px solid white;
+}
