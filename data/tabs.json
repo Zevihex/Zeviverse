@@ -1,14 +1,14 @@
 {
-  "ToDos": [
-    "b"
-  ],
   "Trackers": [
-    "c"
+    "Game"
   ],
   "Wishlists": [
-    "d"
+    "Consoles"
   ],
   "Goals": [
     "test"
+  ],
+  "ToDos": [
+    "General"
   ]
 }

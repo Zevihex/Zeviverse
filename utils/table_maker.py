@@ -1,5 +1,5 @@
 import json
-from PyQt5.QtWidgets import QTableWidget, QTableWidgetItem, QVBoxLayout, QWidget, QCheckBox, QHBoxLayout, QHeaderView
+from PyQt5.QtWidgets import QTableWidget, QTableWidgetItem, QVBoxLayout, QWidget, QCheckBox, QHBoxLayout, QHeaderView, QLineEdit, QPushButton
 from PyQt5.QtCore import Qt
 
 class Table(QWidget):
@@ -28,7 +28,21 @@ class Table(QWidget):
     self.table.blockSignals(False)
     self.table.itemChanged.connect(self.save_row)
     self.table.itemChanged.connect(self.on_item_changed)
-    # self.table.cellChanged.connect(self.on_cell_changed)
+
+    bar = QHBoxLayout()
+
+    self.delete_input = QLineEdit()
+    self.delete_input.setPlaceholderText("Enter row number")
+    delete_btn = QPushButton("Delete Row")
+    delete_btn.clicked.connect(self.delete_row)
+
+    bar.addWidget(self.delete_input)
+    bar.addWidget(delete_btn)
+
+    layout.addLayout(bar)
+
+
+
     print(data)
   
   def load_data(self, data):
@@ -107,14 +121,29 @@ class Table(QWidget):
     self.table.setCellWidget(row, col, container)
 
   def on_item_changed(self, item):
-    print("ITEM CHANGED")
-    row = item.row() + 1
-    col = item.column()
+    row = item.row()
+
+    if not self.check_last_row():
+      return
+
     with open(self.filePath, "r") as f:
       jsonFile = json.load(f)
-    jsonFile[row][col] = item.text()
+
+    row_data = []
+    for c in range(self.table.columnCount() - 1):
+      row_data.append(self.table.item(row, c).text().strip())
+
+    checkbox_widget = self.table.cellWidget(row, self.table.columnCount() - 1)
+    checkbox = checkbox_widget.findChild(QCheckBox) if checkbox_widget else None
+    row_data.append(checkbox.isChecked() if checkbox else False)
+    jsonFile.append(row_data)
+
     with open(self.filePath, "w") as f:
       json.dump(jsonFile, f, indent=2)
+
+    self.table.blockSignals(True)
+    self.add_blank_row()
+    self.table.blockSignals(False)
 
   def on_checkbox_changed(self, r, c, state):
     print("CHECKBOX CHANGED")
@@ -125,3 +154,22 @@ class Table(QWidget):
     with open(self.filePath, "w") as f:
       json.dump(jsonFile, f, indent=2)
 
+  def delete_row(self):
+    text = self.delete_input.text().strip()
+    if not text.isdigit():
+      return
+    row = int(text) - 1
+
+    if row < 0 or row >= self.table.rowCount() - 1:
+      return
+
+    self.table.removeRow(row)
+
+    with open(self.filePath, "r") as f:
+      jsonFile = json.load(f)
+
+    if row < len(jsonFile):
+      jsonFile.pop(row)
+
+    with open(self.filePath, "w") as f:
+      json.dump(jsonFile, f, indent=2)

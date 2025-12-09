@@ -66,11 +66,11 @@ class Tabs(QWidget):
       if category == "goals":
         headers = ["Goal", "Status", "Completed"]
       elif category == "todos":
-        headers = []
+        headers = ["Task", "Completed"]
       elif category == "trackers":
-        headers = []
+        headers = ["Game", "Completed"]
       elif category == "wishlists":
-        headers = []
+        headers = ["Item", "Completed"]
       with open(f"data/{category}/{name}.json", "w") as f:
         json.dump([headers], f, indent=2)
   

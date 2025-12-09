@@ -5,14 +5,14 @@
     "Completed"
   ],
   [
-    "goal1",
-    "not done",
-    true
-  ],
-  [
     "goal2",
     "not done",
-    true
+    false
+  ],
+  [
+    "test",
+    "test3",
+    false
   ],
   [
     "test",
