@@ -2,9 +2,10 @@ import json
 from PyQt5.QtWidgets import QHBoxLayout, QVBoxLayout, QPushButton, QFrame, QWidget
 from PyQt5.QtCore import Qt, QPropertyAnimation
 from controllers.navigation import Navigation
+from controllers.tabMenu import TabMenu
 
 class Menu:
-  def __init__(self, parent_widget, window_layout, stack, category=None, get_name=None):
+  def __init__(self, parent_widget, window_layout, stack, category=None, get_name_for_table=None):
     self.parent = parent_widget
     self.stack = stack
     
@@ -21,17 +22,11 @@ class Menu:
     self.tabs_layout = QHBoxLayout()
     self.tabs_layout.setSpacing(0)
     top_bar.addWidget(self.hamburger_btn)
+    self.tab_menu = TabMenu(self.tabs_layout, category, get_name_for_table) #Refresh for different views? get_name_for_table = make_table
 
-    if category:
-      with open("data/tabs.json", "r") as f:
-        data = json.load(f)
-      if category in data:
-        for name in data[category]:
-          btn = QPushButton(name)
-          btn.setFixedHeight(60)
-          btn.setObjectName("tab")
-          btn.clicked.connect(lambda _, n=name: get_name(n.lower()))
-          self.tabs_layout.addWidget(btn)
+    if category and get_name_for_table:
+      self.tab_menu.build_tabs()
+
     top_bar.addLayout(self.tabs_layout)
 
     top_bar.addStretch()

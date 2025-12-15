@@ -27,3 +27,7 @@ class Wishlists(QWidget):
     self.label = QLabel("Wishlists")
     self.label.setObjectName("label")
     self.layout.addWidget(self.label)
+
+  def showEvent(self, event):
+    self.menu.tab_menu.build_tabs("Wishlists")
+    super().showEvent(event)

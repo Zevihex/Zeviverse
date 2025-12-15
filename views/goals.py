@@ -19,7 +19,7 @@ class Goals(QWidget):
         if w:
           w.deleteLater()
       layout.addWidget(table_widget)
-      
+
     self.menu = Menu(self, self.layout, self.stack, "Goals", make_table)
     self.nav = self.menu.nav
     self.nav.right_click_toggle(self)
@@ -27,3 +27,7 @@ class Goals(QWidget):
     self.label = QLabel("Goals")
     self.label.setObjectName("label")
     self.layout.addWidget(self.label)
+
+  def showEvent(self, event):
+    self.menu.tab_menu.build_tabs("Goals")
+    super().showEvent(event)

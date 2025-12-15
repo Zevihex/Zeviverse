@@ -27,3 +27,7 @@ class Trackers(QWidget):
     self.label = QLabel("Trackers")
     self.label.setObjectName("label")
     self.layout.addWidget(self.label)
+
+  def showEvent(self, event):
+    self.menu.tab_menu.build_tabs("Trackers")
+    super().showEvent(event)

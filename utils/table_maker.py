@@ -7,7 +7,6 @@ class Table(QWidget):
     super().__init__()
     self.filePath = filePath
     self.data = []
-    print(filePath)
     with open(filePath, "r") as f:
       content = f.read().strip()
       data = json.loads(content) if content else []
@@ -40,10 +39,6 @@ class Table(QWidget):
     bar.addWidget(delete_btn)
 
     layout.addLayout(bar)
-
-
-
-    print(data)
   
   def load_data(self, data):
     if not data:
@@ -109,7 +104,7 @@ class Table(QWidget):
   def add_checkbox(self, row, col, value):
     checkbox = QCheckBox()
     checkbox.setChecked(value)
-    checkbox.stateChanged.connect(lambda state, r=row, c=col: self.on_checkbox_changed(r, c, state))
+    checkbox.stateChanged.connect(self.on_checkbox_changed)
     container = QWidget()
     layout = QHBoxLayout(container)
     layout.addStretch()
@@ -145,14 +140,25 @@ class Table(QWidget):
     self.add_blank_row()
     self.table.blockSignals(False)
 
-  def on_checkbox_changed(self, r, c, state):
-    print("CHECKBOX CHANGED")
-    checked = state == 2
-    with open(self.filePath, "r") as f:
-      jsonFile = json.load(f)
-    jsonFile[r+1][c] = checked
-    with open(self.filePath, "w") as f:
-      json.dump(jsonFile, f, indent=2)
+  def on_checkbox_changed(self, state):
+    checkbox = self.sender()
+    checked = state == Qt.Checked
+
+    for row in range(self.table.rowCount()):
+      widget = self.table.cellWidget(row, self.table.columnCount() - 1)
+      if not widget:
+        continue
+
+      if checkbox is widget.findChild(QCheckBox):
+        with open(self.filePath, "r") as f:
+          jsonFile = json.load(f)
+
+        jsonFile[row + 1][self.table.columnCount() - 1] = checked
+
+        with open(self.filePath, "w") as f:
+          json.dump(jsonFile, f, indent=2)
+        return
+
 
   def delete_row(self):
     text = self.delete_input.text().strip()

@@ -34,12 +34,25 @@ class Tabs(QWidget):
     self.submit_btn.setFixedSize(120, 30)
     self.submit_btn.move(500, 180)
 
+    self.cat_combo = QComboBox()
+    self.cat_combo.setParent(self)
+    self.cat_combo.addItems(["", "Goals", "ToDos", "Trackers", "Wishlists"])
+    self.cat_combo.setFixedSize(120, 30)
+    self.cat_combo.move(700, 100)
+    self.cat_combo.currentIndexChanged.connect(self.update_tab_combo)
+
+    self.tab_combo = QComboBox()
+    self.tab_combo.setParent(self)
+    self.tab_combo.addItems([""])
+    self.tab_combo.setFixedSize(120, 30)
+    self.tab_combo.move(700, 140)
+
     self.delete_btn = QPushButton("Delete")
     self.delete_btn.setParent(self)
     self.delete_btn.setObjectName("delete")
-    self.delete_btn.clicked.connect(lambda: self.delete(self.combo.currentText(), self.line_edit.text()))
+    self.delete_btn.clicked.connect(lambda: self.delete(self.cat_combo.currentText(), self.tab_combo.currentText()))
     self.delete_btn.setFixedSize(120, 30)
-    self.delete_btn.move(500, 220)
+    self.delete_btn.move(700, 180)
 
     
     self.label = QLabel("Tabs")
@@ -47,21 +60,25 @@ class Tabs(QWidget):
     layout.addWidget(self.label)
   
   def submit(self, category, name):
+    name = name.lower()
     if not category or not name:
       show_warning("Both fields must be filled")
     else:
       self.combo.setCurrentIndex(0)
       self.line_edit.clear()
-      show_success("Submitted successfully")
       with open("data/tabs.json", "r") as f:
         data = json.load(f)
       if category not in data:
         data[category] = []
+      if name in data[category]:
+        show_warning("Tab already exists!")
+        return
+      else:
+        show_success("Submitted successfully")
       data[category].append(name)
       with open("data/tabs.json", "w") as f:
         json.dump(data, f, indent=2)
       category = category.lower()
-      name = name.lower()
       headers = []
       if category == "goals":
         headers = ["Goal", "Status", "Completed"]
@@ -73,7 +90,8 @@ class Tabs(QWidget):
         headers = ["Item", "Completed"]
       with open(f"data/{category}/{name}.json", "w") as f:
         json.dump([headers], f, indent=2)
-  
+
+
   def delete(self, category, name):
     if not category and not name:
       show_warning("Category must be filled")
@@ -81,8 +99,8 @@ class Tabs(QWidget):
       with open("data/tabs.json", "r") as f:
         content = f.read().strip()
         data = json.loads(content) if content else {}
-      self.combo.setCurrentIndex(0)
-      self.line_edit.clear()
+      self.cat_combo.setCurrentIndex(0)
+      self.tab_combo.setCurrentIndex(0)
       if(category in data and not name):
         del data[category]
         with open('data/tabs.json', "w") as f:
@@ -93,11 +111,25 @@ class Tabs(QWidget):
       elif category in data and name in data[category]:
         data[category].remove(name)
         with open('data/tabs.json', "w") as f:
-          json.dump(data, f, indent=2)
+          json.dump(data, f, indent=2)     
         category = category.lower()
         name = name.lower()
         os.remove(f"data/{category}/{name}.json")
         show_success("Deleted successfully")
       else:
         show_warning("Deletion Unsuccessful")
-      
+
+  def update_tab_combo(self):
+    text = self.cat_combo.currentText()
+    self.tab_combo.clear()
+    items = [""]
+    with open("data/tabs.json", "r") as f:
+      data = json.load(f)
+    if not text:
+      self.tab_combo.clear()
+      return
+    if data[text]:
+      for item in data[text]:
+        items.append(item)
+      self.tab_combo.addItems(items)
+  

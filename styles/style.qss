@@ -65,6 +65,10 @@ QLineEdit {
   font-size: 20px;
 }
 
+#delete {
+  font-size: 20px;
+}
+
 QMessageBox {
   background-color: #222;
   color: white;
@@ -126,13 +130,11 @@ QCheckBox::indicator {
     border: 2px solid white;
 }
 
-/* Checked = solid white square */
 QCheckBox::indicator:checked {
     background-color: white;
     border: 2px solid white;
 }
 
-/* Unchecked = black box */
 QCheckBox::indicator:unchecked {
     background-color: black;
     border: 2px solid white;
