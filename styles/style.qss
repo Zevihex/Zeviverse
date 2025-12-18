@@ -139,3 +139,7 @@ QCheckBox::indicator:unchecked {
     background-color: black;
     border: 2px solid white;
 }
+
+#header {
+  border: 2px solid white;
+}

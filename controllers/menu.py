@@ -22,7 +22,7 @@ class Menu:
     self.tabs_layout = QHBoxLayout()
     self.tabs_layout.setSpacing(0)
     top_bar.addWidget(self.hamburger_btn)
-    self.tab_menu = TabMenu(self.tabs_layout, category, get_name_for_table) #Refresh for different views? get_name_for_table = make_table
+    self.tab_menu = TabMenu(self.tabs_layout, category, get_name_for_table)
 
     if category and get_name_for_table:
       self.tab_menu.build_tabs()

@@ -1,5 +1,6 @@
 import json, os
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QComboBox, QLineEdit, QPushButton, QMessageBox
+from PyQt5.QtCore import Qt
 from controllers.menu import Menu
 from utils.message_boxes import show_warning, show_success
 
@@ -9,6 +10,7 @@ class Tabs(QWidget):
     self.stack = stack
 
     layout = QVBoxLayout(self)
+    self.layout = layout
     layout.setContentsMargins(0, 0, 0, 0)
 
     self.menu = Menu(self, layout, self.stack)
@@ -54,6 +56,15 @@ class Tabs(QWidget):
     self.delete_btn.setFixedSize(120, 30)
     self.delete_btn.move(700, 180)
 
+    self.headers_label = QLabel("Headers")
+    self.headers_label.setAlignment(Qt.AlignCenter)
+    self.headers_label.setObjectName("header")
+    self.headers_label.setParent(self)
+    self.headers_label.setFixedSize(120, 30)
+    self.headers_label.move(300, 100)
+
+    self.headers = []
+    self.add_header_input()
     
     self.label = QLabel("Tabs")
     self.label.setObjectName("label")
@@ -61,8 +72,8 @@ class Tabs(QWidget):
   
   def submit(self, category, name):
     name = name.lower()
-    if not category or not name:
-      show_warning("Both fields must be filled")
+    if not category or not name or len(self.headers) == 1:
+      show_warning("All fields must be filled")
     else:
       self.combo.setCurrentIndex(0)
       self.line_edit.clear()
@@ -71,7 +82,7 @@ class Tabs(QWidget):
       if category not in data:
         data[category] = []
       if name in data[category]:
-        show_warning("Tab already exists!")
+        show_warning("Tab already exists")
         return
       else:
         show_success("Submitted successfully")
@@ -80,17 +91,15 @@ class Tabs(QWidget):
         json.dump(data, f, indent=2)
       category = category.lower()
       headers = []
-      if category == "goals":
-        headers = ["Goal", "Status", "Completed"]
-      elif category == "todos":
-        headers = ["Task", "Completed"]
-      elif category == "trackers":
-        headers = ["Game", "Completed"]
-      elif category == "wishlists":
-        headers = ["Item", "Completed"]
+      for i in range(len(self.headers)):
+        headers.append(self.headers[i].text())
+      headers[-1] = "Completed"
       with open(f"data/{category}/{name}.json", "w") as f:
         json.dump([headers], f, indent=2)
-
+      for line in self.headers:
+        line.deleteLater()
+      self.headers = []
+      self.add_header_input()
 
   def delete(self, category, name):
     if not category and not name:
@@ -133,3 +142,23 @@ class Tabs(QWidget):
         items.append(item)
       self.tab_combo.addItems(items)
   
+  def add_header_input(self):
+    if len(self.headers) >= 10:
+      show_warning("Header Limit Reached")
+      return
+    yCoord = 140 + (len(self.headers) * 40)
+    line = QLineEdit(self)
+    line.setPlaceholderText("Header...")
+    line.setFixedSize(120, 30)
+    line.editingFinished.connect(self.header_input_filled)
+    line.move(300, yCoord)
+    line.show()
+    self.headers.append(line)
+  
+  def header_input_filled(self):
+    if len(self.headers) >= 10:
+      show_warning("Header Limit Reached")
+      return
+    sender = self.sender()
+    if sender.text() and sender == self.headers[-1]:
+      self.add_header_input()
