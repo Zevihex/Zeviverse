@@ -1,4 +1,4 @@
-import sys, os
+import sys, os, shutil
 from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QStackedWidget, QLabel, QShortcut
 from PyQt5.QtGui import QKeySequence, QFontDatabase, QFont
 from views.collection import Collection
@@ -72,6 +72,8 @@ def main():
     with open(style_path,"r") as f:
       app.setStyleSheet(f.read())
   sys.exit(app.exec_())
+  if not os.path.exists("data/tabs.json"):
+    shutil.copy("data/tabs.default.json", "data/tabs.json")
 
 if __name__ == "__main__":
   main()

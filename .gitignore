@@ -33,3 +33,14 @@ Thumbs.db
 
 # Style files
 *.qssc
+
+# Data
+data/tabs.json
+data/goals/*
+data/todos/*
+data/trackers/*
+data/wishlists/*
+!data/goals/.gitkeep
+!data/todos/.gitkeep
+!data/trackers/.gitkeep
+!data/wishlists/.gitkeep
